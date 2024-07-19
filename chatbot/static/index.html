@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recruitment Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        #chat-container {
+            width: 400px;
+            height: 500px;
+            border: 1px solid #ccc;
+            background: white;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #user-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        .user-message {
+            text-align: right;
+            color: blue;
+        }
+        .bot-message {
+            text-align: left;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Job Recruitment Chatbot</h1>
+<div id="chat-container"></div>
+<input type="text" id="user-input" placeholder="Type your message here..." />
+<button id="send-button">Send</button>
+
+<script>
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+
+    sendButton.addEventListener('click', () => {
+        const message = userInput.value;
+        if (message) {
+            addMessage(message, 'user');
+            userInput.value = '';
+            sendMessageToChatbot(message);
+        }
+    });
+
+    function addMessage(message, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+        messageDiv.textContent = message;
+        chatContainer.appendChild(messageDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight; // Scroll to the bottom
+    }
+
+    function sendMessageToChatbot(message) {
+        fetch('http://127.0.0.1:5000/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                candidate_id: "669a36e5b3069370b034a922" // Replace with the actual ObjectId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(data.response, 'bot');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Sorry, there was an error. Please try again.", 'bot');
+        });
+    }
+</script>
+
+</body>
+</html>
