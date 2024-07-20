@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import UploadPage from './components/UploadPage';
+// import AddPosition from './components/AddPosition';
+import Apply from './components/Apply';
+import HrDashboard from './components/HrDashboard';
+import Test from './components/test';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+    <Routes>
+      {/* <Route path={"/"} element={<UploadPage/>}/> */}
+      {/* <Route path={"/newposition"} element={<AddPosition/>}/> */}
+      <Route path={"/apply"} element={<Apply/>}/>
+      <Route path={"/hr"} element={<HrDashboard/>}/>
+      <Route path={"/test"} element={<Test/>}/>
+       
+      </Routes>
+  </Router>
   );
 }
 
