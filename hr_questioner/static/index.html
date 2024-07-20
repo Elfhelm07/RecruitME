@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat { max-width: 600px; margin: auto; }
+        #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        #user-input { width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h1>Chatbot</h1>
+        <div id="messages"></div>
+        <input type="text" id="user-input" placeholder="Type your answer..." />
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        // Function to send user input and receive bot response
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            document.getElementById('messages').innerHTML += `<div>User: ${userInput}</div>`;
+            document.getElementById('user-input').value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('messages').innerHTML += `<div>Bot: ${data.response}</div>`;
+            });
+        }
+
+        // Event listeners
+        document.getElementById('send-button').onclick = sendMessage;
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Ask the first question when the page loads
+        window.onload = function() {
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: "" })  // Send an empty message to get the first question
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('messages').innerHTML += `<div>Bot: ${data.response}</div>`;
+            });
+        };
+    </script>
+</body>
+</html>
